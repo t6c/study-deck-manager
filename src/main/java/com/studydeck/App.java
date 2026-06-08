@@ -13,6 +13,8 @@ import com.studydeck.service.StudySetService;
 public class App {
 
     public static void main(String[] args) {
+        System.setProperty("org.jboss.logging.provider", "slf4j");
+
         FolderRepository folderRepository = new FolderRepository(JpaUtil::getEntityManager);
         StudySetRepository studySetRepository = new StudySetRepository(JpaUtil::getEntityManager);
         FlashcardRepository flashcardRepository = new FlashcardRepository(JpaUtil::getEntityManager);
