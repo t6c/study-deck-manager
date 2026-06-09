@@ -4,6 +4,7 @@ import com.studydeck.entity.Flashcard;
 import com.studydeck.entity.Folder;
 import com.studydeck.entity.StudySet;
 import com.studydeck.repository.FlashcardRepository;
+import com.studydeck.repository.FolderRepository;
 import com.studydeck.repository.StudySetRepository;
 import com.studydeck.service.FlashcardService;
 import com.studydeck.service.FolderService;
@@ -23,6 +24,7 @@ public class ConsoleApp {
     private final MockDataService mockDataService;
     private final StudySetRepository studySetRepository;
     private final FlashcardRepository flashcardRepository;
+    private final FolderRepository folderRepository;
 
     public ConsoleApp(
             FolderService folderService,
@@ -30,7 +32,8 @@ public class ConsoleApp {
             FlashcardService flashcardService,
             MockDataService mockDataService,
             StudySetRepository studySetRepository,
-            FlashcardRepository flashcardRepository
+            FlashcardRepository flashcardRepository,
+            FolderRepository folderRepository
     ) {
         this.folderService = folderService;
         this.studySetService = studySetService;
@@ -38,6 +41,7 @@ public class ConsoleApp {
         this.mockDataService = mockDataService;
         this.studySetRepository = studySetRepository;
         this.flashcardRepository = flashcardRepository;
+        this.folderRepository = folderRepository;
     }
 
     public void run() {
@@ -173,7 +177,7 @@ public class ConsoleApp {
 
     private void createStudySet() {
         Long folderId = readLong("Folder id: ");
-        Folder folder = folderService.findFolder(folderId)
+        Folder folder = folderRepository.findByIdWithStudySets(folderId)
                 .orElseThrow(() -> new IllegalArgumentException("Folder was not found."));
         StudySet studySet = studySetService.createStudySet(folder, readLine("Study set title: "));
         printMessage("Created study set #" + studySet.getId() + ".");
@@ -201,7 +205,7 @@ public class ConsoleApp {
 
     private void createFlashcard() {
         Long studySetId = readLong("Study set id: ");
-        StudySet studySet = studySetService.findStudySet(studySetId)
+        StudySet studySet = studySetRepository.findByIdWithFlashcards(studySetId)
                 .orElseThrow(() -> new IllegalArgumentException("Study set was not found."));
         Flashcard flashcard = flashcardService.createFlashcard(
                 studySet,

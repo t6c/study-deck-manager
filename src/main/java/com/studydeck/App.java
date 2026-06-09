@@ -28,7 +28,8 @@ public class App {
                 flashcardService,
                 new MockDataService(folderService, studySetService, flashcardService),
                 studySetRepository,
-                flashcardRepository
+                flashcardRepository,
+                folderRepository
         );
 
         try {
